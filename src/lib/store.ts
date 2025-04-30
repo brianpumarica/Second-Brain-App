@@ -9,6 +9,20 @@ const isBrowser = typeof window !== 'undefined';
 const storedTasks = isBrowser ? localStorage.getItem('tasks') : null;
 const initialTasks: Task[] = storedTasks ? JSON.parse(storedTasks) : [];
 
+// Theme store
+export const isDarkMode = writable(isBrowser ? localStorage.getItem('theme') === 'dark' : false);
+
+if (isBrowser) {
+  isDarkMode.subscribe(value => {
+    localStorage.setItem('theme', value ? 'dark' : 'light');
+    if (value) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  });
+}
+
 // Create the tasks store
 export const tasks = writable<Task[]>(initialTasks);
 
@@ -29,7 +43,7 @@ export const filteredTasks = derived(
 // Create a derived store for weekly review (tasks unclassified for more than 7 days)
 export const weeklyReviewTasks = derived(tasks, ($tasks) => {
   const sevenDaysAgo = subDays(new Date(), 7);
-  
+
   return $tasks.filter(task => {
     const taskDate = parseISO(task.createdAt);
     return task.category === 'unclassified' && taskDate < sevenDaysAgo;
@@ -55,7 +69,7 @@ export function addTask(content: string) {
     createdAt: new Date().toISOString(),
     completed: false
   };
-  
+
   tasks.update(tasks => [newTask, ...tasks]);
 }
 
@@ -64,30 +78,30 @@ export function deleteTask(id: string) {
 }
 
 export function updateTaskCategory(id: string, category: TaskCategory) {
-  tasks.update(tasks => 
-    tasks.map(task => 
-      task.id === id 
-        ? { ...task, category } 
+  tasks.update(tasks =>
+    tasks.map(task =>
+      task.id === id
+        ? { ...task, category }
         : task
     )
   );
 }
 
 export function toggleTaskCompletion(id: string) {
-  tasks.update(tasks => 
-    tasks.map(task => 
-      task.id === id 
-        ? { ...task, completed: !task.completed } 
+  tasks.update(tasks =>
+    tasks.map(task =>
+      task.id === id
+        ? { ...task, completed: !task.completed }
         : task
     )
   );
 }
 
 export function updateTaskContent(id: string, content: string) {
-  tasks.update(tasks => 
-    tasks.map(task => 
-      task.id === id 
-        ? { ...task, content } 
+  tasks.update(tasks =>
+    tasks.map(task =>
+      task.id === id
+        ? { ...task, content }
         : task
     )
   );
