@@ -106,7 +106,21 @@ export function updateTaskContent(id: string, content: string) {
     )
   );
 }
-
+export function updateTaskNotification(id: string, datetime: string | null) {
+  tasks.update(tasks => 
+    tasks.map(task => 
+      task.id === id 
+        ? { 
+            ...task, 
+            notification: datetime ? {
+              datetime,
+              enabled: true
+            } : undefined
+          } 
+        : task
+    )
+  );
+}
 // Helper function to generate a unique ID
 function generateId(): string {
   return Math.random().toString(36).substr(2, 9);
