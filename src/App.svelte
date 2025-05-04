@@ -85,7 +85,7 @@
             <li
               class="animate-fadeIn"
               in:fly={{ y: 10, duration: 300, delay: 50 }}
-              out:fade={{ duration: 200 }}
+              out:fade={{ duration: 300 }}
             >
               <TaskItem {task} />
             </li>

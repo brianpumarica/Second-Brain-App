@@ -4,7 +4,6 @@
   import {
     deleteTask,
     updateTaskCategory,
-    toggleTaskCompletion,
     updateTaskNotification,
   } from "$lib/store";
   import { formatDistanceToNow, format } from "date-fns";
@@ -21,6 +20,7 @@
   let datePickerInput: HTMLInputElement;
   let flatpickrInstance: any;
   let selectedDate: Date | null = null;
+  let isDeleting = false;
 
   onMount(() => {
     if (isBrowser) {
@@ -118,7 +118,8 @@
   }
 
   function handleDelete() {
-    deleteTask(task.id);
+    isDeleting = true;
+    setTimeout(() => deleteTask(task.id), 300); // Espera la duración del fade
   }
 
   function getRelativeTime(dateString: string): string {
@@ -159,21 +160,21 @@
   <!-- Task Content -->
   <div class="flex items-start">
     <button
-      on:click={() => toggleTaskCompletion(task.id)}
-      class="mt-1 mr-2 flex-shrink-0 h-5 w-5 rounded-full border-2 {task.completed
+      on:click={handleDelete}
+      class="mt-1 mr-2 flex-shrink-0 h-5 w-5 rounded-full border-2 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500
+      {isDeleting
         ? 'bg-primary-500 border-primary-500'
-        : 'border-gray-300 dark:border-gray-600'} transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
-      aria-label={task.completed ? "Mark as incomplete" : "Mark as complete"}
+        : 'border-gray-300 dark:border-gray-600'} "
+      aria-label="Eliminar tarea"
     >
-      {#if task.completed}
+      {#if isDeleting}
         <span class="flex items-center justify-center text-white text-xs"
           >✓</span
         >
       {/if}
     </button>
-
     <div
-      class="flex-1 {task.completed
+      class="flex-1 {isDeleting
         ? 'line-through text-gray-500 dark:text-gray-400'
         : ''}"
     >
@@ -219,14 +220,6 @@
         {task.notification?.enabled
           ? "Editar recordatorio"
           : "Agregar recordatorio"}
-      </button>
-
-      <button
-        on:click={handleDelete}
-        class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors"
-        aria-label="Delete task"
-      >
-        Eliminar
       </button>
     </div>
   </div>

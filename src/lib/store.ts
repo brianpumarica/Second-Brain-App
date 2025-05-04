@@ -67,7 +67,6 @@ export function addTask(content: string) {
     content,
     category: 'unclassified',
     createdAt: new Date().toISOString(),
-    completed: false
   };
 
   tasks.update(tasks => [newTask, ...tasks]);
@@ -82,16 +81,6 @@ export function updateTaskCategory(id: string, category: TaskCategory) {
     tasks.map(task =>
       task.id === id
         ? { ...task, category }
-        : task
-    )
-  );
-}
-
-export function toggleTaskCompletion(id: string) {
-  tasks.update(tasks =>
-    tasks.map(task =>
-      task.id === id
-        ? { ...task, completed: !task.completed }
         : task
     )
   );
