@@ -100,7 +100,7 @@
       const datetime = selectedDate.getTime(); // guardas como timestamp local
       updateTaskNotification(task.id, datetime);
       setupNotification(datetime, task);
-    } 
+    }
     showNotificationPicker = false;
   }
 
@@ -249,6 +249,16 @@
         class="input"
         placeholder="Selecciona fecha y hora"
       />
+      <button
+        class="mt-2 text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors"
+        on:click={() => {
+          updateTaskNotification(task.id, null);
+          selectedDate = null;
+          showNotificationPicker = false;
+        }}
+      >
+        🗑️ Borrar recordatorio
+      </button>
     </div>
   {/if}
 
