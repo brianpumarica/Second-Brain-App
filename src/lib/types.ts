@@ -5,7 +5,6 @@ export interface Task {
   content: string;
   category: TaskCategory;
   createdAt: string;
-  completed: boolean;
 }
 
 export type Filter = TaskCategory | 'all';
